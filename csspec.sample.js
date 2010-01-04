@@ -14,7 +14,11 @@ with(CSSpec.describe("application.css")) {
   describe("all layouts", function() {
     describe("body", function() {
       it("has a white background", function() {
-        value(selected.css("background-color")).should.be.color("#fff")
+        expect($("body").css("background-color")).to.be.color("#fff")
+        expect($("h1").css("font-family")).to.match(/^helvetica/i)
+        expect($("h1").offset.top).to.be.greater.than(10)
+        expect($("h1").css("line-height")).toBeMultipleOf(20)
+        expect($("h1").css("line-height")).to.be.multiple.of(20)
       })
     })
   })
@@ -46,7 +50,7 @@ with(CSSpec.describe("application.css")) {
 
     describe("#beta", function() {
       it("is top-aligned with #alpha", function() {
-        value(this.offset().top).should.equal($("#alpha").offset().top)
+        expect(this.offset().top).to.equal($("#alpha").offset().top)
       })
     })
   })
