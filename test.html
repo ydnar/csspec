@@ -1,5 +1,13 @@
 <html>
-  <head><title>CSSpec Test</title></head>
+  <head>
+    <title>CSSpec Test</title>
+    <style>
+body {
+  /* color: #000; */
+  background: #fff;
+}
+    </style>
+  </head>
   <body>
     <h1>CSSpec Test</h1>
     <script src="jquery.min.js"></script>
@@ -8,11 +16,21 @@
 with(CSSpec.describe("application.css")) {
   describe("(all layouts)", function(){
     describe("body", function() {
+      it("has no padding", function() {
+        expect($("body").css("padding-left")).toEqual("0px")
+      })
+      
       it("has a white background", function() {
-        value(selected.css("background-color")).should.be.color("#fff")
+        expect($("body").css("background-color")).toEqual("rgb(255, 255, 255)")
+      })
+
+      it("has black text", function() {
+        expect($("body").css("color")).toEqual("rgb(0, 0, 0)")
       })
     })
-  }).run();
+  })
+  
+  run();
 }
     </script>
   </body>
