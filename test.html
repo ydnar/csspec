@@ -1,0 +1,19 @@
+<html>
+  <head><title>CSSpec Test</title></head>
+  <body>
+    <h1>CSSpec Test</h1>
+    <script src="jquery.min.js"></script>
+    <script src="csspec.js"></script>
+    <script>
+with(CSSpec.describe("application.css")) {
+  describe("(all layouts)", function(){
+    describe("body", function() {
+      it("has a white background", function() {
+        value(selected.css("background-color")).should.be.color("#fff")
+      })
+    })
+  }).run();
+}
+    </script>
+  </body>
+</html>
