@@ -13,7 +13,7 @@
   
   CSSpec.Example.prototype = {
     run: function() {
-      var ctx = {};
+      var ctx = {currentExample: this};
       if(this.parent)
         this.parent.runBeforeHooks(ctx);
       console.log("Running example: " + this.descriptions().join(" "));
@@ -38,7 +38,7 @@
     this.examples = [];
     this.beforeHooks = [];
     this.afterHooks = [];
-    console.log("Created example group: " + this.descriptions());
+    // console.log("Created example group: " + this.descriptions());
   };
 
 
@@ -46,9 +46,10 @@
     run: function() {
       var group = this;
       $.each(this.examples, function() {
-        var ctx = {};
-        this.run(ctx);
+        this.run();
       });
+      if(!this.parent)
+        console.log("Success!");
     },
     
     runBeforeHooks: function(ctx) {
@@ -69,35 +70,53 @@
       return descriptions;
     }
   };
+  
+  
+  CSSpec.Matchers = function(value) {
+    this.value = value;
+  };
+  
+  
+  CSSpec.Matchers.prototype = {
+    toEqual: function(expected) {
+      if(!(this.value == expected))
+        throw "Expected " + expected + " but got " + this.value;
+    }
+  };
 
 
   CSSpec.Scope = function(desc) {
-    this.currentExampleGroup = null;
-    this.currentExample = null;
+    this._group = new CSSpec.ExampleGroup(desc);
   };
   
   
   CSSpec.Scope.prototype = {
     describe: function(desc, fn) {
-      var group = new CSSpec.ExampleGroup(desc, this.currentExampleGroup);
-      this.currentExampleGroup = group;
+      var group = new CSSpec.ExampleGroup(desc, this._group);
+      this._group = group;
       if(fn)
         fn.apply(group);
-      this.currentExampleGroup = group.parent;
+      this._group = group.parent;
       return group;
     },
 
     it: function(desc, fn) {
-      return new CSSpec.Example(desc, this.currentExampleGroup, fn);
+      return new CSSpec.Example(desc, this._group, fn);
+    },
+    
+    expect: function(value) {
+      return new CSSpec.Matchers(value)
+    },
+    
+    run: function() {
+      this._group.run();
     }
   };
   
   
   
   CSSpec.describe = function(desc) {
-    var scope = new CSSpec.Scope(desc);
-    scope.currentExampleGroup = new CSSpec.ExampleGroup(desc);
-    return scope;
+    return new CSSpec.Scope(desc);
   };
 
 
