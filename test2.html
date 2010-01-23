@@ -15,14 +15,14 @@ body {
     <script>
 with(CSSpec) {
   describe("application.css")
-    .describe("body")
-      .it("has a white background", function() {
+    describe("body")
+      it("has a white background", function() {
         expect($("body").css("background-color")).toEqual("rgb(255, 255, 255)")
       })
-    .end
-  .end
+    end()
+  end()
   
-  examples[0].run();
+  examples[0].run()
 }
     </script>
   </body>

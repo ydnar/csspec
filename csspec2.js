@@ -1,15 +1,29 @@
 (function(){
+
   var CSSpec = {
     examples: [],
+    parseExampleGroup: null,
 
     describe: function(desc) {
-      var example = new CSSpec.ExampleGroup(desc);
-      this.examples.push(example);
-      return example;
+      this.parseExampleGroup = this.addExample(new CSSpec.ExampleGroup(desc));
+    },
+    
+    it: function(desc, fn) {
+      this.addExample(new CSSpec.Example(desc, fn));
+    },
+    
+    end: function() {
+      this.parseExampleGroup = this.parseExampleGroup.parent;
     },
 
     expect: function(value) {
       return new CSSpec.Matchers(value)
+    },
+    
+    addExample: function(example) {
+      example.parent = this.parseExampleGroup;
+      this.examples.push(example);
+      return example;
     }
   };
 
@@ -46,22 +60,7 @@
     console.log("Created example group: " + this.descriptions());
   };
 
-  CSSpec.ExampleGroup.prototype = {
-    describe: function(desc) {
-      return this.addExample(new CSSpec.ExampleGroup(desc));
-    },
-    
-    it: function(desc, fn) {
-      this.addExample(new CSSpec.Example(desc, fn));
-      return this;
-    },
-    
-    addExample: function(example) {
-      example.parent = example.end = this;
-      this.examples.push(example);
-      return example;
-    },
-    
+  CSSpec.ExampleGroup.prototype = {    
     run: function() {
       $.each(this.examples, function() {
         this.run();
