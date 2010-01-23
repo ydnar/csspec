@@ -63,7 +63,6 @@
     },
     
     run: function() {
-      var group = this;
       $.each(this.examples, function() {
         this.run();
       });
