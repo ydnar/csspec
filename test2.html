@@ -17,10 +17,12 @@ with(CSSpec) {
   describe("application.css")
     .describe("body")
       .it("has a white background", function() {
-        expect($("body").css("background-color")).toEqual("#fff")
+        expect($("body").css("background-color")).toEqual("rgb(255, 255, 255)")
       })
     .end
   .end
+  
+  examples[0].run();
 }
     </script>
   </body>
