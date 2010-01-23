@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>JS Syntax Test</title>
+    <title>CSSpec Test</title>
     <style>
 body {
   /* color: #000; */
@@ -11,10 +11,17 @@ body {
   <body>
     <h1>CSSpec Test</h1>
     <script src="jquery.min.js"></script>
+    <script src="csspec2.js"></script>
     <script>
-window
-  .console
-    .log("Hello World!")
+with(CSSpec) {
+  describe("application.css")
+    .describe("body")
+      .it("has a white background", function() {
+        expect($("body").css("background-color")).toEqual("#fff")
+      })
+    .end
+  .end
+}
     </script>
   </body>
 </html>
