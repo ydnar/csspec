@@ -72,13 +72,13 @@
     
     runBeforeHooks: function(ctx) {
       if(this.parent)
-        this.parent.runBeforeHooks();
+        this.parent.runBeforeHooks(ctx);
       $.each(this.beforeHooks, function() { this.apply(ctx); });
     },
     
     runAfterHooks: function(ctx) {
       if(this.parent)
-        this.parent.runAfterHooks();
+        this.parent.runAfterHooks(ctx);
       $.each(this.afterHooks, function() { this.apply(ctx); });
     },
     
