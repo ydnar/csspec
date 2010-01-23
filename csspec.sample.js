@@ -29,6 +29,16 @@ with(CSSpec) {
   .end
 }
 
+with(CSSpec) {
+  describe("application.css")
+    describe("body")
+      it("has a white background", function() {
+        expect($("body").css("background-color")).toEqual("rgb(255, 255, 255)")
+      })
+    end()
+  end()
+}
+
 with(CSSpec.describe("application.css")) {
   describe("all layouts", function() {
     describe("body", function() {
