@@ -10,6 +10,25 @@ CSSpec.describe("application.css", function() {
   })
 })
 
+CSSpec.describe("application.css")
+  .describe("all layouts")
+    .describe("body")
+      .it("has a white background", function() {
+        
+      })
+    .end
+  .describe("two-column layout")
+
+with(CSSpec) {
+  describe("application.css")
+    .describe("body")
+      .it("has a white background", function() {
+        expect($("body").css("background-color")).toEqual("#fff")
+      })
+    .end
+  .end
+}
+
 with(CSSpec.describe("application.css")) {
   describe("all layouts", function() {
     describe("body", function() {
