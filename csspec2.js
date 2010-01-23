@@ -3,10 +3,7 @@
     examples: [],
 
     describe: function(desc) {
-      return CSSpec.addExample(new CSSpec.ExampleGroup(desc));
-    },
-    
-    addExample: function(example) {
+      var example = new CSSpec.ExampleGroup(desc);
       this.examples.push(example);
       return example;
     },
