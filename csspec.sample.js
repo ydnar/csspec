@@ -1,11 +1,13 @@
 /* CSSpec: Theoretical BDD for CSS based on jQuery. Doesn’t exist yet. */
 
-CSSpec("application.css")
-  ("all layouts")
-    ("body")
-      ("has a white background", function() {
-        this($("body").css("background-color")).shouldEqual("rgb(255, 255, 255)")
-      })
+(CSSpec)
+  ("application.css")
+    ("all layouts")
+      ("body")
+        ("has a white background", function() {
+          this($("body").css("background-color")).shouldEqual("rgb(255, 255, 255)")
+        })
+      ()
     ()
   ()
 ()

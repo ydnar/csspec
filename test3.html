@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>CSSpec Test 3</title>
+    <style>
+body {
+  /* color: #000; */
+  background: #fff;
+}
+    </style>
+  </head>
+  <body>
+    <h1>CSSpec Test</h1>
+    <script src="jquery.min.js"></script>
+    <script src="csspec3.js"></script>
+    <script>
+(CSSpec)
+  ("application.css")
+    ("body")
+      ("has a white background", function() {
+        this($("body").css("background-color")).shouldEqual("rgb(255, 255, 255)")
+      })
+      
+      ("has black text", function() {
+        this($("body").css("color")).shouldEqual("rgb(0, 0, 0)")
+      })
+    ()
+  ()
+()
+
+CSSpec.root.examples[0].run()
+    </script>
+  </body>
+</html>
