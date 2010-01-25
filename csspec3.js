@@ -34,11 +34,13 @@
       var ctx = function(value) {
         return new CSSpec.Matchers(value);
       };
+      CSSpec.Matchers.patch();
       if(this.parent)
         this.parent.runBeforeHooks(ctx);
       this.fn.apply(ctx);
       if(this.parent)
         this.parent.runAfterHooks(ctx);
+      CSSpec.Matchers.unpatch();
     },
     
     descriptions: function() {
@@ -93,10 +95,26 @@
   };
   
   CSSpec.Matchers.prototype = {
-    shouldEqual: function(expected) {
+    equal: function(expected) {
       if(!(this.value == expected))
         throw "Expected " + expected + " but got " + this.value;
     }
+  };
+  
+  var patched = [Array, Boolean, Date, Number, RegExp, String];
+  
+  CSSpec.Matchers.patch = function() {
+    $.each(patched, function() {
+      this.prototype.should = function() {
+        return new CSSpec.Matchers(this);
+      };
+    });
+  };
+  
+  CSSpec.Matchers.unpatch = function() {
+    $.each(patched, function() {
+      delete this.prototype.should;
+    });
   };
   
   
