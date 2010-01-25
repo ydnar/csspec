@@ -15,13 +15,21 @@ body {
     <script>
 (CSSpec)
   ("application.css")
-    ("body")
-      ("has a white background", function() {
-        this($("body").css("background-color")).shouldEqual("rgb(255, 255, 255)")
+    ("body")      
+      ("should have a white background", function() {
+        $("body").css("background-color").should().equal("rgb(255, 255, 255)")
       })
       
-      ("has black text", function() {
-        this($("body").css("color")).shouldEqual("rgb(0, 0, 0)")
+      ("should have black text", function() {
+        $("body").css("color").should().equal("rgb(0, 0, 0)")
+      })
+    ()
+    
+    ("h1")
+      ("should be display: block", function() {
+        $("h1").each(function() {
+          $(this).css("display").should().equal("block")
+        })
       })
     ()
   ()
