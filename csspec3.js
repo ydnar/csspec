@@ -25,7 +25,7 @@
   CSSpec.Example = function(desc, fn) {
     this.description = desc;
     this.fn = fn;
-    console.log("Created example: " + this.descriptions());
+    // console.log("Created example: " + this.descriptions());
   };
   
   CSSpec.Example.prototype = {
@@ -58,7 +58,7 @@
     this.examples = [];
     this.beforeHooks = [];
     this.afterHooks = [];
-    console.log("Created example group: " + this.descriptions());
+    // console.log("Created example group: " + this.descriptions());
   };
 
   CSSpec.ExampleGroup.prototype = {
