@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>CSSpec Test 4</title>
+    <style>
+body {
+  /* color: #000; */
+  background: #fff;
+}
+    </style>
+  </head>
+  <body>
+    <h1>CSSpec Test</h1>
+    <script src="jquery.min.js"></script>
+    <script src="csspec5.js"></script>
+    <script>
+
+var x = new (new Function())();
+x.constructor.foo = "foo";
+
+for(var i in x) {
+  console.log(i + " = " + x[i]);
+}
+
+/*
+with(CSSpec()) {
+
+  describe("application.css")
+    describe("body")
+      before(function() {
+      
+      })
+    
+      it("should have a white background", function() {
+        expect($("body").css("background-color")).toEqual("rgb(255, 255, 255)")
+      })
+
+      it("should have black text", function() {
+        expect($("body").css("color")).toEqual("rgb(0, 0, 0)")
+      })
+    end()
+
+    describe("h1")
+      it("should be display: block", function() {
+        $("h1").each(function() {
+          expect($(this).css("display")).toEqual("block")
+        })
+      })
+    end()
+  end()
+
+  // run()
+}*/
+    </script>
+  </body>
+</html>
