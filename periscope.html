@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Periscope Test</title>
+    <style>
+body {
+  color: #000;
+  background: #fff;
+}
+    </style>
+  </head>
+  <body>
+    <h1>CSSpec Test</h1>
+    <script src="jquery.min.js"></script>
+    <script src="periscope.js"></script>
+    <script>
+
+var puts = function(str) {
+  document.body.appendChild(document.createTextNode(str));
+  document.body.appendChild(document.createElement("br"));
+};
+
+with(Periscope()) {
+  var func = _p(function() {
+    foo();
+    bar();
+    baz();
+  });
+}
+
+var object = {
+  foo: function() { puts("foo"); },
+  bar: function() { puts("bar"); },
+  baz: function() { puts("baz"); }
+};
+
+func.apply(object);
+
+    </script>
+  </body>
+</html>
