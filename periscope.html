@@ -19,6 +19,28 @@ var puts = function(str) {
   document.body.appendChild(document.createElement("br"));
 };
 
+var Cons = new Function("this.__proto__ = arguments.callee.prototype;");
+
+Cons.prototype = {
+  foo: "ThisIsFoo"
+};
+
+var x = new Cons();
+puts("x.foo = " + x.foo);
+
+x.__proto__.foo = "ThisUsedToBeFoo";
+puts("x.foo = " + x.foo);
+
+for(var i in x) {
+  puts(i);
+}
+
+
+/*
+var x = new (new Function())();
+
+
+
 with(Periscope()) {
   var func = _p(function() {
     foo();
@@ -34,7 +56,7 @@ var object = {
 };
 
 func.apply(object);
-
+*/
     </script>
   </body>
 </html>
