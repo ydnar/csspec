@@ -3,72 +3,30 @@
   var undef;
 
   var CSSpec = function() {
-    return new CSSpec.ParseScope();
-  };
-  
-  
-  CSSpec.Scope = function(prototype) {
-    var scope = new (new Function());
-
-    $.extend(scope.constructor, {
-      prototypes: new Array(),
-
-      setPrototype: function(prototype) {
-        this.prototypes.push(this.prototype);
-        this.prototype = prototype;
-      },
-      
-      resetPrototype: function() {
-        this.prototype = this.prototypes.pop();
-      }
-    });
-
-    if(prototype) {
-      scope.constructor.setPrototype(prototype);
-    }
-
-    return scope;
-  };
-  
-  
-  CSSpec.ParseScope = function() {
-    return new CSSpec.Scope(CSSpec.ParseScope.prototype);
-  };
-  
-  
-  CSSpec.ParseScope.prototype = {
-    describe: function(desc) {
-      var group = CSSpec.addExampleGroup(new CSSpec.ExampleGroup(desc));
-    }
+    return new CSSpec.Context();
   };
 
 
-  CSSpec.Example = function(desc, fn) {
+  CSSpec.Example = function(desc, fn, context) {
     this.description = desc;
     this.fn = fn;
+    this.context = context;
     // console.log("Created example: " + this.descriptions());
   };
-  
+
   CSSpec.Example.prototype = {
     run: function() {
       console.log("Running example: " + this.descriptions().join(" "));
-      var ctx = function(value) {
-        return new CSSpec.Matchers(value);
-      };
-      CSSpec.Matchers.patch();
-      if(this.parent)
-        this.parent.runBeforeHooks(ctx);
-      this.fn.apply(ctx);
-      if(this.parent)
-        this.parent.runAfterHooks(ctx);
-      CSSpec.Matchers.unpatch();
+      this.context.example = this;
+      this.parent && this.parent.runBeforeHooks(this.context);
+      this.fn.apply(this.context);
+      this.parent && this.parent.runAfterHooks(this.context);
+      this.context.example = null;
     },
-    
+
     descriptions: function() {
       var descriptions = this.parent ? this.parent.descriptions() : [];
-      if(this.description) {
-        descriptions.push(this.description);
-      }
+      this.description && descriptions.push(this.description);
       return descriptions;
     }
   };
@@ -88,116 +46,79 @@
       this.examples.push(example);
       return example;
     },
+    
+    addBeforeHook: function(fn) {
+      this.beforeHooks.push(fn);
+    },
+    
+    addAfterHook: function(fn) {
+      this.afterHooks.push(fn);
+    },
 
     run: function() {
       $.each(this.examples, function() { this.run(); });
       if(!this.parent)
         console.log("Success!");
     },
-    
-    runBeforeHooks: function(ctx) {
-      if(this.parent)
-        this.parent.runBeforeHooks(ctx);
-      $.each(this.beforeHooks, function() { this.apply(ctx); });
+
+    runBeforeHooks: function(context) {
+      this.parent && this.parent.runBeforeHooks(context);
+      $.each(this.beforeHooks, function() { this.apply(context); });
     },
-    
-    runAfterHooks: function(ctx) {
-      if(this.parent)
-        this.parent.runAfterHooks(ctx);
-      $.each(this.afterHooks, function() { this.apply(ctx); });
+
+    runAfterHooks: function(context) {
+      this.parent && this.parent.runAfterHooks(context);
+      $.each(this.afterHooks, function() { this.apply(context); });
     },
-    
+
     descriptions: CSSpec.Example.prototype.descriptions
   };
-  
-  
+
+
+  CSSpec.rootExampleGroup = new CSSpec.ExampleGroup();
+
+
   CSSpec.Matchers = function(value) {
     this.value = value;
   };
-  
+
   CSSpec.Matchers.prototype = {
-    equal: function(expected) {
-      if(!(this.value == expected))
+    toEqual: function(expected) {
+      if(!(this.value == expected)) {
         throw "Expected " + expected + " but got " + this.value;
-    }
-  };
-  
-  var patched = [Array, Boolean, Date, Number, RegExp, String];
-  
-  CSSpec.Matchers.patch = function() {
-    $.each(patched, function() {
-      this.prototype.should = function() {
-        return new CSSpec.Matchers(this);
-      };
-    });
-  };
-  
-  CSSpec.Matchers.unpatch = function() {
-    $.each(patched, function() {
-      delete this.prototype.should;
-    });
-  };
-  
-  
-  
-  CSSpec.Token = function(value) {
-    this.value = value;
-  };
-  
-  
-  CSSpec.Parser = function() {
-    this.values = [];
-    var _this = this;
-    this._parse = function() {
-      return _this.parse.apply(_this, arguments);
-    };
-  };
-  
-  
-  CSSpec.Parser.prototype = {
-    parse: function() {
-      var _this = this;
-      $.each(arguments, function() {
-        console.log("Parsed " + this);
-        _this.values.push(this);
-      });
-      return this._parse;
+      }
     }
   };
 
 
-  CSSpec.describe = function(desc) {
-    var parser = new CSSpec.Parser();
-    return parser.parse(desc);
+  CSSpec.Context = function() {
+    this.exampleGroup = CSSpec.rootExampleGroup;
   };
 
-  CSSpec.expect = function(value) {
-    return new CSSpec.Matchers(value);
-  };
+  CSSpec.Context.prototype = {
+    describe: function(desc, fn) {
+      this.exampleGroup = this.exampleGroup.addExample(new CSSpec.ExampleGroup(desc));
+      fn && fn.apply(this);
+      this.exampleGroup = this.exampleGroup.parent;
+    },
 
-  CSSpec.before = new CSSpec.Token("before");
-  CSSpec.after = new CSSpec.Token("after");
-  CSSpec.end = new CSSpec.Token("end");
-
-  
-  var x = function() {  
-    var ac = arguments.callee;
-    var ctx = this;
-    if(ctx == undef || ctx == global) {
-      ctx = CSSpec.root;
-    }
+    it: function(desc, fn) {
+      this.exampleGroup.addExample(new CSSpec.Example(desc, fn, this));
+    },
     
-    if(arguments.length == 0) {
-      ctx = ctx.parent;
-      ctx.previous = undef;
-    } else if(typeof arguments[0] === "function") {
-      ctx.fn = arguments[0];
-      ctx = ctx.parent;
-    } else {
-      ctx = ctx.addExample(new CSSpec.Example(arguments[0]));
+    before: function(fn) {
+      this.exampleGroup.addBeforeHook(fn);
+    },
+    
+    after: function(fn) {
+      this.exampleGroup.addAfterHook(fn);
+    },
+    
+    expect: function(value) {
+      return new CSSpec.Matchers(value);
     }
   };
-  
+
 
   window.CSSpec = CSSpec;
 })();

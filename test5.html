@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>CSSpec Test 4</title>
+    <title>CSSpec Test 5</title>
     <style>
 body {
   /* color: #000; */
@@ -13,21 +13,12 @@ body {
     <script src="jquery.min.js"></script>
     <script src="csspec5.js"></script>
     <script>
-
-var x = new (new Function())();
-x.constructor.foo = "foo";
-
-for(var i in x) {
-  console.log(i + " = " + x[i]);
-}
-
-/*
 with(CSSpec()) {
 
-  describe("application.css")
-    describe("body")
+  describe("application.css", function() {
+    describe("body", function() {
       before(function() {
-      
+        console.log("Before " + example.descriptions());
       })
     
       it("should have a white background", function() {
@@ -37,19 +28,20 @@ with(CSSpec()) {
       it("should have black text", function() {
         expect($("body").css("color")).toEqual("rgb(0, 0, 0)")
       })
-    end()
+    })
 
-    describe("h1")
+    describe("h1", function() {
       it("should be display: block", function() {
         $("h1").each(function() {
           expect($(this).css("display")).toEqual("block")
         })
       })
-    end()
-  end()
+    })
+  })
 
-  // run()
-}*/
+  CSSpec.rootExampleGroup.run()
+}
+
     </script>
   </body>
 </html>
