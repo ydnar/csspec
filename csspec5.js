@@ -7,8 +7,8 @@
   };
 
 
-  CSSpec.Example = function(desc, fn, context) {
-    this.description = desc;
+  CSSpec.Example = function(description, fn, context) {
+    this.description = description;
     this.fn = fn;
     this.context = context;
     // console.log("Created example: " + this.descriptions());
@@ -16,11 +16,21 @@
 
   CSSpec.Example.prototype = {
     run: function() {
-      this.context.example = this;
+      this.setup();
       this.parent && this.parent.runBeforeHooks(this.context);
       console.log("Running: " + this.descriptions().join(" "));
       this.fn.apply(this.context);
       this.parent && this.parent.runAfterHooks(this.context);
+      this.teardown();
+    },
+    
+    setup: function() {
+      this.context.example = this;
+      this.context.select.apply(this.context, this.descriptions());
+    },
+    
+    teardown: function() {
+      this.context.select();
       this.context.example = null;
     },
 
@@ -32,8 +42,9 @@
   };
 
 
-  CSSpec.ExampleGroup = function(desc) {
-    this.description = desc;
+  CSSpec.ExampleGroup = function(description, selector) {
+    this.description = description;
+    this.selector = selector;
     this.examples = [];
     this.beforeHooks = [];
     this.afterHooks = [];
@@ -96,14 +107,14 @@
   };
 
   CSSpec.Context.prototype = {
-    describe: function(desc, fn) {
-      this.exampleGroup = this.exampleGroup.addExample(new CSSpec.ExampleGroup(desc));
+    describe: function(description, fn) {
+      this.exampleGroup = this.exampleGroup.addExample(new CSSpec.ExampleGroup(description));
       fn && fn.apply(this);
       this.exampleGroup = this.exampleGroup.parent;
     },
 
-    it: function(desc, fn) {
-      this.exampleGroup.addExample(new CSSpec.Example(desc, fn, this));
+    it: function(description, fn) {
+      this.exampleGroup.addExample(new CSSpec.Example(description, fn, this));
     },
     
     before: function(fn) {
@@ -112,6 +123,25 @@
     
     after: function(fn) {
       this.exampleGroup.addAfterHook(fn);
+    },
+    
+    select: function() {
+      this.selector = null;
+      this.selected = null;
+      var selectors = $.makeArray(arguments);            
+      for(var start = 0; start < selectors.length; start++) {
+        for(var end = selectors.length; end > start; end--) {
+          var selector = selectors.slice(start, end).join(" ");
+          var selected = $(selector);
+          if(selected.get(0)) {
+            this.selector = selector;
+            // console.log("Selected \"" + this.selector + "\"");
+            // console.log(selected.get(0));
+            this.selected = selected;
+            return;
+          }
+        }
+      }
     },
     
     expect: function(value) {

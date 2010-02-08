@@ -14,39 +14,37 @@ body {
     <script src="csspec5.js"></script>
     <script>
 with(CSSpec()) {
-
-  describe("application.css", function() {
-    describe("body", function() {
-      before(function() {
-        console.log("    Before: " + example.descriptions().join(" "));
-      })
-      
-      after(function() {
-        console.log("    After: " + example.descriptions().join(" "));
-      })
-      
+  describe("body", function() {
+    before(function() {
+      console.log("Before");
+    })
     
-      it("should have a white background", function() {
-        expect($("body").css("background-color")).toEqual("rgb(255, 255, 255)")
-      })
-
-      it("should have black text", function() {
-        expect($("body").css("color")).toEqual("rgb(0, 0, 0)")
-      })
+    after(function() {
+      console.log("After");
+    })
+    
+  
+    it("should have a white background", function() {
+      expect(selected.css("background-color")).toEqual("rgb(255, 255, 255)")
     })
 
-    describe("h1", function() {
-      it("should be display: block", function() {
-        $("h1").each(function() {
-          expect($(this).css("display")).toEqual("block")
-        })
-      })
+    it("should have black text", function() {
+      expect(selected.css("color")).toEqual("rgb(0, 0, 0)")
     })
   })
 
-  CSSpec.rootExampleGroup.run()
+  describe("h1", function() {
+    it("should be display: block", function() {
+      selected.each(function() {
+        expect($(this).css("display")).toEqual("block")
+      })
+    })
+  })
 }
 
+$(document).ready(function() {
+  CSSpec.rootExampleGroup.run();
+});
     </script>
   </body>
 </html>
