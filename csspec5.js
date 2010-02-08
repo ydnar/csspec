@@ -3,7 +3,9 @@
   var undef;
 
   var CSSpec = function() {
-    return new CSSpec.Context();
+    var context = new CSSpec.Context();
+    context.enqueue();
+    return context;
   };
 
 
@@ -103,7 +105,7 @@
 
 
   CSSpec.Context = function() {
-    this.exampleGroup = CSSpec.rootExampleGroup;
+    this.exampleGroup = new CSSpec.ExampleGroup();
   };
 
   CSSpec.Context.prototype = {
@@ -124,7 +126,20 @@
     after: function(fn) {
       this.exampleGroup.addAfterHook(fn);
     },
+
+    run: function() {
+      this.exampleGroup.run();
+    },
     
+    enqueue: function() {
+      var _this = this;
+      window.setTimeout(function() { _this.run(); }, 0);
+    },
+    
+    expect: function(value) {
+      return new CSSpec.Matchers(value);
+    },
+
     select: function() {
       this.selector = null;
       this.selected = null;
@@ -142,10 +157,6 @@
           }
         }
       }
-    },
-    
-    expect: function(value) {
-      return new CSSpec.Matchers(value);
     }
   };
 
