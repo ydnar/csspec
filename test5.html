@@ -31,12 +31,12 @@ with(CSSpec()) {
     it("should have black text", function() {
       expect(selected.css("color")).toEqual("rgb(0, 0, 0)")
     })
-  })
-
-  describe("h1", function() {
-    it("should be display: block", function() {
-      selected.each(function() {
-        expect($(this).css("display")).toEqual("block")
+    
+    describe("h1", function() {
+      it("should be display: block", function() {
+        selected.each(function() {
+          expect($(this).css("display")).toEqual("block")
+        })
       })
     })
   })
