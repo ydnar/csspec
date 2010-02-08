@@ -16,9 +16,9 @@
 
   CSSpec.Example.prototype = {
     run: function() {
-      console.log("Running example: " + this.descriptions().join(" "));
       this.context.example = this;
       this.parent && this.parent.runBeforeHooks(this.context);
+      console.log("Running: " + this.descriptions().join(" "));
       this.fn.apply(this.context);
       this.parent && this.parent.runAfterHooks(this.context);
       this.context.example = null;

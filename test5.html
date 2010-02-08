@@ -18,8 +18,13 @@ with(CSSpec()) {
   describe("application.css", function() {
     describe("body", function() {
       before(function() {
-        console.log("Before " + example.descriptions());
+        console.log("    Before: " + example.descriptions().join(" "));
       })
+      
+      after(function() {
+        console.log("    After: " + example.descriptions().join(" "));
+      })
+      
     
       it("should have a white background", function() {
         expect($("body").css("background-color")).toEqual("rgb(255, 255, 255)")
