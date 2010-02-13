@@ -25,12 +25,12 @@
       this.parent && this.parent.runAfterHooks(this.context);
       this.teardown();
     },
-    
+
     setup: function() {
       this.context.example = this;
       this.context.select.apply(this.context, this.descriptions());
     },
-    
+
     teardown: function() {
       this.context.select();
       this.context.example = null;
@@ -59,11 +59,11 @@
       this.examples.push(example);
       return example;
     },
-    
+
     addBeforeHook: function(fn) {
       this.beforeHooks.push(fn);
     },
-    
+
     addAfterHook: function(fn) {
       this.afterHooks.push(fn);
     },
@@ -106,6 +106,9 @@
   };
 
   CSSpec.Context.prototype = {
+
+    /* Parsing */
+
     describe: function(description, fn) {
       this.exampleGroup = this.exampleGroup.addExample(new CSSpec.ExampleGroup(description));
       fn && fn.apply(this);
@@ -115,32 +118,39 @@
     it: function(description, fn) {
       this.exampleGroup.addExample(new CSSpec.Example(description, fn, this));
     },
-    
+
     before: function(fn) {
       this.exampleGroup.addBeforeHook(fn);
     },
-    
+
     after: function(fn) {
       this.exampleGroup.addAfterHook(fn);
     },
 
+
+    /* Execution */
+
     run: function() {
       this.exampleGroup.run();
     },
-    
+
     enqueue: function() {
       var _this = this;
       window.setTimeout(function() { _this.run(); }, 0);
     },
-    
+
+
+    /* Runtime */
+
     expect: function(value) {
       return new CSSpec.Matchers(value);
     },
 
+
     select: function() {
       this.selector = null;
       this.selected = null;
-      var selectors = $.makeArray(arguments);            
+      var selectors = $.makeArray(arguments);
       for(var start = 0; start < selectors.length; start++) {
         for(var end = selectors.length; end > start; end--) {
           var selector = selectors.slice(start, end).join(" ");
