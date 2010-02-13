@@ -88,9 +88,6 @@
   };
 
 
-  CSSpec.rootExampleGroup = new CSSpec.ExampleGroup();
-
-
   CSSpec.Matchers = function(value) {
     this.value = value;
   };
