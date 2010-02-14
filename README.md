@@ -29,8 +29,6 @@ CSSpec uses a lightweight DSL that doesn’t pollute global objects, knows how t
           })
         })
       })
-
-      run();
     }
 
 Huh?
@@ -41,6 +39,4 @@ Huh?
 Who?
 ---
 
-CSSpec is © 2009 Randy Reddig.
-
-
+CSSpec is © 2010 Randy Reddig.
