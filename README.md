@@ -17,15 +17,15 @@ CSSpec uses a lightweight DSL that doesn’t pollute global objects, knows how t
       describe("(all layouts)", function(){
         describe("body", function() {
           it("has no padding", function() {
-            expect($("body").css("padding-left")).toEqual("0px")
+            expect(selected.css("padding-left")).toEqual("0px")
           })
     
           it("has a white background", function() {
-            expect($("body").css("background-color")).toEqual("rgb(255, 255, 255)")
+            expect(selected.css("background-color")).toEqual("rgb(255, 255, 255)")
           })
 
           it("has black text", function() {
-            expect($("body").css("color")).toEqual("rgb(0, 0, 0)")
+            expect(selected.css("color")).toEqual("rgb(0, 0, 0)")
           })
         })
       })
