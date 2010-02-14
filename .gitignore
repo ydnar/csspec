@@ -3,3 +3,4 @@
 *.tmproj
 .DS_Store
 *-markdown.html
+lib/csspec.js
