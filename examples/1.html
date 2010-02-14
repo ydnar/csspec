@@ -7,22 +7,20 @@ body {
   background: #fff;
 }
     </style>
-  </head>
-  <body>
-    <h1>CSSpec Test</h1>
     <script src="../lib/csspec.js"></script>
     <script>
 with(CSSpec()) {
   describe("body", function() {
     before(function() {
-      console.log("Before");
+      console.log("Before")
     })
-    
+
     after(function() {
-      console.log("After");
+      console.log("After")
+      $("body").css("color", "red")
     })
-    
-  
+
+
     it("should have a white background", function() {
       expect(selected.css("background-color")).toEqual("rgb(255, 255, 255)")
     })
@@ -30,7 +28,7 @@ with(CSSpec()) {
     it("should have black text", function() {
       expect(selected.css("color")).toEqual("rgb(0, 0, 0)")
     })
-    
+
     describe("h1", function() {
       it("should be display: block", function() {
         selected.each(function() {
@@ -41,5 +39,8 @@ with(CSSpec()) {
   })
 }
     </script>
+  </head>
+  <body>
+    <h1>CSSpec Test</h1>
   </body>
 </html>
